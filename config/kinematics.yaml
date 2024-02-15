@@ -1,0 +1,40 @@
+all:
+  kinematics_solver: pick_ik/PickIkPlugin
+  kinematics_solver_search_resolution: 0.001
+  kinematics_solver_timeout: 10000000.0
+  memetic_num_threads: 1
+  cost_threshold: 10000.0
+  stop_optimization_on_valid_solution: true
+  memetic_gd_max_iters: 5
+  memetic_population_size: 40
+  #kinematics_solver_timeout: 0.1  
+arm:
+  kinematics_solver: kdl_kinematics_plugin/KDLKinematicsPlugin
+  kinematics_solver_search_resolution: 0.001
+  kinematics_solver_timeout: 1.0  
+endo:
+  kinematics_solver: kdl_kinematics_plugin/KDLKinematicsPlugin
+  kinematics_solver_search_resolution: 0.005
+  kinematics_solver_timeout: 0.1
+endo_rot:
+  kinematics_solver: kdl_kinematics_plugin/KDLKinematicsPlugin
+  kinematics_solver_search_resolution: 0.005
+  kinematics_solver_timeout: 0.1
+koi:
+  kinematics_solver: pick_ik/PickIkPlugin
+  kinematics_solver_search_resolution: 0.005
+  kinematics_solver_timeout: 1000000000000.0 # this is high so that the limit is only given by the number of iterations in the algorithm
+  kinematics_solver_attempts: 1
+  position_threshold: 10000.0 # this is high as we only care about the cost function
+  orientation_threshold: 10000.0 # this is high as we only care about the cost function
+  cost_threshold: 0.05
+  memetic_stop_on_first_solution: false
+  memetic_max_generations: 100
+  memetic_num_threads: 1
+  stop_optimization_on_valid_solution: true # this means cost < cost_threshold which is good enough for us
+  rotation_scale: 0.0
+  position_scale: 0.0
+  approximate_solution_cost_threshold: 0.90 # we also accept non optimal solutions as long as they are not totally off
+  memetic_gd_max_iters: 25
+  memetic_gd_max_time: 1000.0
+  memetic_wipeout_fitness_tol: 0.00001

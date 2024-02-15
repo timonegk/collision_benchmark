@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<robot name="endo">
+    <link name="base_link">
+        <visual>
+            <geometry>
+                <cylinder length="0.3" radius="0.01"/>
+            </geometry>
+            <origin xyz="0 0 0.15" rpy="0 0 0"/>
+        </visual>
+    </link>
+    <link name="link1" />
+    <link name="link2">
+        <visual>
+            <geometry>
+                <cylinder length="0.3" radius="0.01"/>
+            </geometry>
+            <origin xyz="0.15 0 0" rpy="0 1.57 0"/>
+            <material name="green">
+                <color rgba="0 1 0 1"/>
+            </material>
+        </visual>
+    </link>
+    <link name="link3">
+        <visual>
+            <geometry>
+                <cylinder length="0.3" radius="0.01"/>
+            </geometry>
+            <origin xyz="0 0 0.15" rpy="0 0 0"/>
+        </visual>
+    </link>
+    <link name="link4" />
+    <link name="link5" />
+    <link name="link6" />
+    <link name="link7" />
+    <link name="link8" />
+    <link name="link9">
+        <visual>
+            <geometry>
+                <cylinder length="0.1" radius="0.01"/>
+            </geometry>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+        </visual>
+    </link>
+    <link name="tip_link">
+        <visual>
+            <geometry>
+                <sphere radius="0.03"/>
+            </geometry>
+        </visual>
+    </link>
+    <joint name="shoulder_lift_joint" type="prismatic">
+        <parent link="base_link"/>
+        <child link="link1"/>
+        <origin xyz="0 0 0.3" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="0" upper="1.0" effort="100" velocity="0.5"/>
+    </joint>
+    <joint name="shoulder_pan_joint" type="revolute">
+        <parent link="link1"/>
+        <child link="link2"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-1.5" upper="1.5" effort="100" velocity="0.5"/>
+    </joint>
+    <joint name="elbow_joint" type="revolute">
+        <parent link="link2"/>
+        <child link="link3"/>
+        <origin xyz="0.3 0 0" rpy="0 1.57 0"/>
+        <axis xyz="0 1 0"/>
+        <limit lower="-0.5" upper="0.5" effort="100" velocity="0.5"/>
+    </joint>
+    <joint name="wrist_1_joint" type="revolute">
+        <parent link="link3"/>
+        <child link="link4"/>
+        <origin xyz="0 0 0.3" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <limit lower="-1.5" upper="1.5" effort="100" velocity="0.5"/>
+    </joint>
+    <joint name="wrist_2_joint" type="revolute">
+        <parent link="link4"/>
+        <child link="link5"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-1.5" upper="1.5" effort="100" velocity="0.5"/>
+    </joint>
+    <joint name="wrist_3_joint" type="revolute">
+        <parent link="link5"/>
+        <child link="link6"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <axis xyz="1 0 0"/>
+        <limit lower="-1.5" upper="1.5" effort="100" velocity="0.5"/>
+    </joint>
+    <joint name="endo_first_joint" type="prismatic">
+        <parent link="link6"/>
+        <child link="link7"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="0" upper="0.5" effort="100" velocity="0.5"/>
+    </joint>
+    <joint name="endo_second_joint_first_dof" type="revolute">
+        <parent link="link7"/>
+        <child link="link8"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-1.5" upper="1.5" effort="100" velocity="0.5"/>
+    </joint>
+    <joint name="endo_second_joint_second_dof" type="revolute">
+        <parent link="link8"/>
+        <child link="link9"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <limit lower="-1.5" upper="1.5" effort="100" velocity="0.5"/>
+    </joint>
+    <joint name="tip" type="fixed">
+        <parent link="link9"/>
+        <child link="tip_link"/>
+        <origin xyz="0 0 0.1" rpy="0 0 0"/>
+    </joint>
+</robot>

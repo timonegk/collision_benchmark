@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>benchmark</name>
+  <version>1.0.0</version>
+  <description>IK Benchmarking package</description>
+
+  <maintainer email="timon.engelke@uni-hamburg.de">Timon Engelke</maintainer>
+  <author email="timon.engelke@uni-hamburg.de">Timon Engelke</author>
+
+  <license>Apache 2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>ros_industrial_cmake_boilerplate</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
