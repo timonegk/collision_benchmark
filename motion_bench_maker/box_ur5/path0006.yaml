@@ -1,0 +1,9 @@
+joint_trajectory:
+  joint_names: [shoulder_pan_joint, shoulder_lift_joint, elbow_joint, wrist_1_joint, wrist_2_joint, wrist_3_joint]
+  points:
+    - time_from_start: 0
+      positions: [1.57, -1.5707, 0, -1.5707, -1.57, 3.14]
+    - time_from_start: 0
+      positions: [-1.094837308489652, -0.8504013703877139, 0.9417283163914296, -0.7044545173293529, -1.355011716776927, 1.624440539513814]
+    - time_from_start: 0
+      positions: [-1.273514595820296, -0.3124329222940595, 0.6351589595719332, -1.902809533793982, -1.568209546423282, 0.1026780909133916]
