@@ -13,6 +13,8 @@ find_package(rclcpp REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(ament_index_cpp REQUIRED)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic")
+
 add_executable(benchmark_node src/benchmark_node.cpp src/benchmark.cpp
   src/benchmark_logger.cpp)
 ament_target_dependencies(

@@ -1,18 +1,31 @@
 from launch import LaunchDescription
 from launch.actions import OpaqueFunction
 from launch_ros.actions import Node
-from launch.substitutions import PathJoinSubstitution
-from launch_ros.substitutions import FindPackageShare
-from moveit_configs_utils import MoveItConfigsBuilder
 
 
 def launch(context, *args, **kwargs):
+    ompl_planning_pipeline_config = {
+        "move_group": {
+            "planning_plugin": "ompl_interface/OMPLPlanner",
+            # "request_adapters":
+            # """default_planner_request_adapters/AddTimeOptimalParameterization default_planner_request_adapters/FixWorkspaceBounds default_planner_request_adapters/FixStartStateBounds default_planner_request_adapters/FixStartStateCollision default_planner_request_adapters/FixStartStatePathConstraints""",
+            # "start_state_max_bounds_error": 0.1,
+        }
+    }
     return [
-        Node(package='benchmark',
-             executable='motion_bench_maker_importer',
-             name='benchmark',
-             output='screen',
-             )
+        Node(
+            package="moveit_ros_move_group",
+            executable="move_group",
+            output="screen",
+            parameters=[
+                {"default_planning_pipeline": "ompl",
+                 "planning_pipelines": ["ompl"],
+                 "ompl": {
+                     "planning_plugins": ["ompl_interface/OMPLPlanner"],
+                 }
+                 }
+            ],
+        )
     ]
 
 

@@ -8,7 +8,6 @@ from moveit_configs_utils import MoveItConfigsBuilder
 
 def launch(context, *args, **kwargs):
     moveit_config = MoveItConfigsBuilder("elise").robot_description_kinematics(file_path=PathJoinSubstitution([FindPackageShare('benchmark'), 'config', 'kinematics.yaml']).perform(context)).to_moveit_configs()
-    print(moveit_config)
 
 
     return [
