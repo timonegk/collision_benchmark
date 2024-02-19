@@ -56,7 +56,8 @@ int main(int argc, char **argv) {
 
   auto node = rclcpp::Node::make_shared("planning_scene_publisher");
   auto planning_scene_pub =
-      node->create_publisher<moveit_msgs::msg::PlanningScene>("planning_scene", rclcpp::QoS(1)
+      node->create_publisher<moveit_msgs::msg::PlanningScene>("planning_scene",
+                                                              rclcpp::QoS(1)
           .transient_local());
   auto robot_description_pub =
       node->create_publisher<std_msgs::msg::String>("robot_description",
