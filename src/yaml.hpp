@@ -4,6 +4,7 @@
 #include <moveit_msgs/msg/robot_state.hpp>
 #include <moveit_msgs/msg/allowed_collision_matrix.hpp>
 #include <moveit_msgs/msg/collision_object.hpp>
+#include <moveit_msgs/msg/joint_constraint.hpp>
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include <shape_msgs/msg/solid_primitive.hpp>
 #include <geometry_msgs/msg/pose.hpp>
@@ -49,5 +50,10 @@ struct convert<moveit_msgs::msg::AllowedCollisionMatrix> {
 template<>
 struct convert<moveit_msgs::msg::PlanningScene> {
     static bool decode(const Node& node, moveit_msgs::msg::PlanningScene& scene);
+};
+
+template<>
+struct convert<moveit_msgs::msg::JointConstraint> {
+    static bool decode(const Node& node, moveit_msgs::msg::JointConstraint& constraint);
 };
 }

@@ -35,11 +35,11 @@ def launch(context, *args, **kwargs):
             output="screen",
             parameters=[{"robot_description": robot_description}],
         ),
-        Node(
-            package="joint_state_publisher",
-            executable="joint_state_publisher",
-            output="screen",
-        ),
+        #Node(
+        #    package="joint_state_publisher_gui",
+        #    executable="joint_state_publisher_gui",
+        #    output="screen",
+        #),
         Node(
             package="rviz2",
             executable="rviz2",

@@ -103,4 +103,12 @@ bool convert<moveit_msgs::msg::PlanningScene>::decode(
       node["world"]["collision_objects"].as<std::vector<moveit_msgs::msg::CollisionObject>>();
   return true;
 }
+
+bool convert<moveit_msgs::msg::JointConstraint>::decode(
+    const Node &node,
+    moveit_msgs::msg::JointConstraint &constraint) {
+    constraint.joint_name = node["joint_name"].as<std::string>();
+    constraint.position = node["position"].as<double>();
+    return true;
+};
 }
