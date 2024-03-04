@@ -20,17 +20,13 @@ def launch(context, *args, **kwargs):
             Node(package='benchmark',
                  executable='benchmark_node',
                  name='benchmark',
+                 output='screen'),
+            Node(package='rviz2',
+                 executable='rviz2',
+                 name='rviz2',
                  output='screen',
-                 parameters=[
-                     moveit_config.robot_description,
-                     moveit_config.robot_description_semantic,
-                     moveit_config.robot_description_kinematics,
-                     {'random_seed': 0,
-                      'planning_group': 'arm',
-                      'sample_size': 1000,
-                      'ik_timeout': 0.1,
-                      'ik_iteration_display_step': 1,
-                      }]),
+                 arguments=['-d', PathJoinSubstitution([FindPackageShare('benchmark'), 'config',
+                                                        'benchmark.rviz']).perform(context)]),
         ]
 
 

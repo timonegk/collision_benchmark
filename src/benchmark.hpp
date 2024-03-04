@@ -8,6 +8,7 @@
 #include <fstream>
 #include <rclcpp/rclcpp.hpp>
 #include "benchmark_logger.hpp"
+#include "benchmark_visualizer.hpp"
 
 /**
  * @brief Class for Inverse Kinematics Benchmarking
@@ -17,6 +18,11 @@
  * to evaluate success rate, solve time, and error metrics.
  */
 class IKBenchmarking {
+  enum class IKInitializationType {
+    RANDOM,   ///< Random joint values
+    PREVIOUS, ///< Previous joint values
+    DEFAULT   ///< Default joint values
+  };
  public:
   /**
    * @brief Constructor using a shared pointer to an rclcpp::Node.
@@ -74,7 +80,7 @@ class IKBenchmarking {
    * initializing relevant member variables start the process of
    * collecting IK solving data.
    */
-  void run(std::string log_file);
+  void run(const std::string &log_file);
 
   /**
    * @brief Get the success rate of the solver.
@@ -126,11 +132,12 @@ class IKBenchmarking {
   bool calculation_done_;         ///< Flag to indicate whether the calculation is done.
 
   std::shared_ptr<BenchmarkLogger> benchmarking_logger_;  ///< Shared pointer to the benchmark logger.
+  std::shared_ptr<BenchmarkVisualizer> benchmarking_visualizer_;  ///< Shared pointer to the benchmark visualizer.
 
   /**
    * @brief Initialize the relevant class variables and prepare for benchmarking.
    */
-  void initialize(std::string log_file);
+  void initialize(const std::string& log_file);
 
   /**
    * @brief Collect and save the benchmarking data.

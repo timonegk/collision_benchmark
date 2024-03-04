@@ -4,11 +4,12 @@
 #include <string>
 #include <vector>
 #include <numeric>
+#include <iostream>
 
 class BenchmarkLogger {
  public:
   explicit BenchmarkLogger(const std::string& file_name) {
-    data_file_.open(file_name, std::ios::app);
+    data_file_.open(file_name);
     data_file_ << "trial,found_ik,solve_time,position_error,orientation_error\n";
   }
 

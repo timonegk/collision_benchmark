@@ -8,7 +8,7 @@
 
 using namespace std::chrono_literals;
 
-void IKBenchmarking::initialize(std::string log_file) {
+void IKBenchmarking::initialize(const std::string& log_file) {
     const auto seed = static_cast<unsigned int>(node_->get_parameter("random_seed").as_int());
     random_numbers::RandomNumberGenerator generator_{seed};
 
@@ -28,6 +28,7 @@ void IKBenchmarking::initialize(std::string log_file) {
     robot_state_->setToDefaultValues();
 
     benchmarking_logger_ = std::make_shared<BenchmarkLogger>(log_file);
+    benchmarking_visualizer_ = std::make_shared<BenchmarkVisualizer>(node_);
 }
 
 void IKBenchmarking::gather_data() {
@@ -36,35 +37,63 @@ void IKBenchmarking::gather_data() {
     ik_timeout_ = node_->get_parameter("ik_timeout").as_double();
     ik_iteration_display_step_ =
         static_cast<size_t>(node_->get_parameter("ik_iteration_display_step").as_int());
+    bool follow_line = true;
+    auto ik_initialization = IKBenchmarking::IKInitializationType::PREVIOUS;
 
     for (size_t i = 0; i < sample_size_; ++i) {
         if ((i + 1) % ik_iteration_display_step_ == 0) {
             RCLCPP_INFO(logger_, "Solved sample %ld/%ld ...", i + 1, sample_size_);
         }
 
-        // Generate a random state and solve Forward Kinematics (FK)
-        robot_state_->setToRandomPositions(joint_model_group_, generator_);
-        robot_state_->updateLinkTransforms();
-        const Eigen::Isometry3d tip_link_pose =
-            robot_state_->getGlobalLinkTransform(tip_link_name_);
+        Eigen::Isometry3d tip_link_pose;
+        if (!follow_line) {
+          // save previous joint values
+          std::vector<double> previous_joint_values;
+          robot_state_->copyJointGroupPositions(joint_model_group_, previous_joint_values);
 
-        //  Log the sampled random joint values for debugging
-        std::vector<double> random_joint_values;
-        robot_state_->copyJointGroupPositions(joint_model_group_, random_joint_values);
-        std::stringstream ss;
-        ss << "[";
-        for (size_t i = 0; i < random_joint_values.size(); ++i) {
+          // Generate a random state and solve Forward Kinematics (FK)
+          robot_state_->setToRandomPositions(joint_model_group_, generator_);
+          robot_state_->updateLinkTransforms();
+          tip_link_pose = robot_state_->getGlobalLinkTransform(tip_link_name_);
+
+          //  Log the sampled random joint values for debugging
+          std::vector<double> random_joint_values;
+          robot_state_->copyJointGroupPositions(joint_model_group_, random_joint_values);
+          std::stringstream ss;
+          ss << "[";
+          for (size_t i = 0; i < random_joint_values.size(); ++i) {
             ss << random_joint_values[i];
             if (i != random_joint_values.size() - 1) {
-                ss << ", ";
+              ss << ", ";
             }
+          }
+          ss << "]";
+          RCLCPP_DEBUG(logger_, "The sampled random joint values are:\n%s\n", ss.str().c_str());
+          // restore previous joint values
+          robot_state_->setJointGroupPositions(joint_model_group_, previous_joint_values);
+          robot_state_->updateLinkTransforms();
+        } else {
+          tip_link_pose = [&] {
+            Eigen::Isometry3d pose = Eigen::Isometry3d::Identity();
+            double x_value = double(i) / double(sample_size_) - 0.5;
+            pose.translation().x() = x_value;
+            pose.translation().y() = 0.5;
+            pose.translation().z() = 1.0;
+            return pose;
+          }();
         }
-        ss << "]";
-        RCLCPP_DEBUG(logger_, "The sampled random joint values are:\n%s\n", ss.str().c_str());
 
-        // Randomize the initial seed state of the robot before solving IK
-        robot_state_->setToRandomPositions(joint_model_group_, generator_);
-        robot_state_->updateLinkTransforms();
+        if (ik_initialization == IKInitializationType::RANDOM) {
+          // Randomize the initial seed state of the robot before solving IK
+          robot_state_->setToRandomPositions(joint_model_group_, generator_);
+          robot_state_->updateLinkTransforms();
+        } else if (ik_initialization == IKInitializationType::PREVIOUS) {
+          // Use the previous state as the initial seed state for solving IK
+          robot_state_->updateLinkTransforms();
+        } else {
+          // Set the robot state to the default state
+          robot_state_->setToDefaultValues();
+        }
 
         // Solve Inverse kinematics (IK)
         const auto start_time = std::chrono::high_resolution_clock::now();
@@ -89,6 +118,9 @@ void IKBenchmarking::gather_data() {
 
         benchmarking_logger_->log_data(i + 1, found_ik, solve_time.count(), position_error,
                                       orientation_error);
+        benchmarking_visualizer_->visualize_ik(robot_state_);
+        // sleed 0.01 seconds
+        std::this_thread::sleep_for(10ms);
     }
 
     // Average IK solving time and success rate
@@ -101,7 +133,7 @@ void IKBenchmarking::gather_data() {
     calculation_done_ = true;
 }
 
-void IKBenchmarking::run(std::string log_file) {
+void IKBenchmarking::run(const std::string &log_file) {
     this->initialize(log_file);
     this->gather_data();
 }

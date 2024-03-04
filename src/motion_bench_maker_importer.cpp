@@ -54,8 +54,8 @@ sensor_msgs::msg::JointState get_goal_state_from_request(const std::string &file
 
 int main(int argc, char **argv) {
   rclcpp::init(argc, argv);
-  //std::string exp = "bookshelf_tall_ur5";
-  std::string exp = "box_ur5";
+  std::string exp = "bookshelf_tall_ur5";
+  //std::string exp = "box_ur5";
   std::string no = "0001";
   std::string path = ament_index_cpp::get_package_share_directory("benchmark");
   std::string file = path + "/motion_bench_maker/" + exp + "/scene" + no + ".yaml";

@@ -16,7 +16,9 @@ find_package(ament_index_cpp REQUIRED)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic")
 
 add_executable(benchmark_node src/benchmark_node.cpp src/benchmark.cpp
-  src/benchmark_logger.cpp)
+  src/benchmark_logger.cpp
+    src/benchmark_visualizer.cpp
+    src/benchmark_visualizer.hpp)
 ament_target_dependencies(
   benchmark_node
   moveit_core
@@ -39,5 +41,6 @@ install(TARGETS motion_bench_maker_importer DESTINATION lib/${PROJECT_NAME})
 install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
 install(DIRECTORY config DESTINATION share/${PROJECT_NAME})
 install(DIRECTORY motion_bench_maker DESTINATION share/${PROJECT_NAME})
+install(FILES scripts/plot_data.py DESTINATION lib/${PROJECT_NAME})
 
 ament_package()
