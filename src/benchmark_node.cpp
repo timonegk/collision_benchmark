@@ -57,17 +57,34 @@ void set_kinematics_config_kdl(const rclcpp::Node::SharedPtr &node) {
   declare_and_set_parameter(node, rclcpp::Parameter("robot_description_kinematics.all.kinematics_solver_timeout", 1.0));
 }
 
-void set_kinematics_config_pick_ik(const rclcpp::Node::SharedPtr &node) {
+void set_kinematics_config_trac_ik(const rclcpp::Node::SharedPtr &node, const std::string &solve_type) {
+  declare_and_set_parameter(node,
+                            rclcpp::Parameter("robot_description_kinematics.all.kinematics_solver",
+                                              "trac_ik_kinematics_plugin/TRAC_IKKinematicsPlugin"));
   declare_and_set_parameter(node,
                             rclcpp::Parameter("robot_description_kinematics.all.kinematics_solver_search_resolution",
                                               0.001));
   declare_and_set_parameter(node, rclcpp::Parameter("robot_description_kinematics.all.kinematics_solver_timeout", 1.0));
-  declare_and_set_parameter(node, rclcpp::Parameter("robot_description_kinematics.all.memetic_gd_max_iters", 5));
+  declare_and_set_parameter(node, rclcpp::Parameter("robot_description_kinematics.all.solve_type",
+                                                    solve_type));
+}
+
+void set_kinematics_config_pick_ik(const rclcpp::Node::SharedPtr &node) {
+  declare_and_set_parameter(node,
+                            rclcpp::Parameter("robot_description_kinematics.all.kinematics_solver",
+                                              "pick_ik/PickIkPlugin"));
+
+  declare_and_set_parameter(node,
+                            rclcpp::Parameter("robot_description_kinematics.all.kinematics_solver_search_resolution",
+                                              0.001));
+  declare_and_set_parameter(node, rclcpp::Parameter("robot_description_kinematics.all.kinematics_solver_timeout", 1.0));
+  /*declare_and_set_parameter(node, rclcpp::Parameter("robot_description_kinematics.all.memetic_gd_max_iters", 5));
   declare_and_set_parameter(node, rclcpp::Parameter("robot_description_kinematics.all.memetic_population_size", 40));
   declare_and_set_parameter(node,
                             rclcpp::Parameter("robot_description_kinematics.all.stop_optimization_on_valid_solution",
                                               true));
   declare_and_set_parameter(node, rclcpp::Parameter("robot_description_kinematics.all.cost_threshold", 10000.0));
+  */
 }
 
 void set_kinematics_config_bio_ik(const rclcpp::Node::SharedPtr &node) {
@@ -78,12 +95,13 @@ void set_kinematics_config_bio_ik(const rclcpp::Node::SharedPtr &node) {
                             rclcpp::Parameter("robot_description_kinematics.all.kinematics_solver_search_resolution",
                                               0.001));
   declare_and_set_parameter(node, rclcpp::Parameter("robot_description_kinematics.all.kinematics_solver_timeout", 1.0));
-  declare_and_set_parameter(node, rclcpp::Parameter("robot_description_kinematics.all.memetic_gd_max_iters", 5));
+  /*declare_and_set_parameter(node, rclcpp::Parameter("robot_description_kinematics.all.memetic_gd_max_iters", 5));
   declare_and_set_parameter(node, rclcpp::Parameter("robot_description_kinematics.all.memetic_population_size", 40));
   declare_and_set_parameter(node,
                             rclcpp::Parameter("robot_description_kinematics.all.stop_optimization_on_valid_solution",
                                               true));
   declare_and_set_parameter(node, rclcpp::Parameter("robot_description_kinematics.all.cost_threshold", 10000.0));
+  */
 }
 
 int main(int argc, char **argv) {
@@ -93,14 +111,14 @@ int main(int argc, char **argv) {
       .transient_local());
   declare_and_set_parameter(node, rclcpp::Parameter("random_seed", 0));
   declare_and_set_parameter(node, rclcpp::Parameter("sample_size", 1000));
-  declare_and_set_parameter(node, rclcpp::Parameter("ik_timeout", 0.1));
+  declare_and_set_parameter(node, rclcpp::Parameter("ik_timeout", 0.05));
   declare_and_set_parameter(node, rclcpp::Parameter("ik_iteration_display_step", 10));
 
   set_elise_parameters(node, robot_description_publisher);
   std::filesystem::path pkg_share_dir(ament_index_cpp::get_package_share_directory("benchmark"));
   std::filesystem::path results_dir(pkg_share_dir / "results");
   std::filesystem::create_directories(results_dir);
-  {
+  /*{
     set_kinematics_config_kdl(node);
     IKBenchmarking ik_benchmarking(node);
     ik_benchmarking.run((results_dir / "kdl.csv").string());
@@ -109,12 +127,22 @@ int main(int argc, char **argv) {
     set_kinematics_config_bio_ik(node);
     IKBenchmarking ik_benchmarking(node);
     ik_benchmarking.run((results_dir / "bio_ik.csv").string());
-  }
+  }*/
   {
     set_kinematics_config_pick_ik(node);
     IKBenchmarking ik_benchmarking(node);
-    ik_benchmarking.run((results_dir / "pick_ik").string());
+    ik_benchmarking.run((results_dir / "pick_ik.csv").string());
   }
-  return std::system("ros2 run benchmark plot_data.py");
-  //return 0;
+  /*{
+    set_kinematics_config_trac_ik(node, "Speed");
+    IKBenchmarking ik_benchmarking(node);
+    ik_benchmarking.run((results_dir / "trac_ik_speed.csv").string());
+  }
+  {
+    set_kinematics_config_trac_ik(node, "Distance");
+    IKBenchmarking ik_benchmarking(node);
+    ik_benchmarking.run((results_dir / "trac_ik_distance.csv").string());
+  }*/
+  //return std::system("ros2 run benchmark plot_data.py");
+  return 0;
 }

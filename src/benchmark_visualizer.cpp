@@ -8,7 +8,7 @@ BenchmarkVisualizer::BenchmarkVisualizer(rclcpp::Node::SharedPtr &node) : node_(
 
 void BenchmarkVisualizer::visualize_ik(const moveit::core::RobotStateConstPtr &robot_state) const {
   const moveit::core::JointModelGroup *joint_model_group = robot_state->getJointModelGroup(planning_group_name_);
-  sensor_msgs::msg::JointState joint_state_msg = [&] {
+  const sensor_msgs::msg::JointState joint_state_msg = [&] {
     sensor_msgs::msg::JointState msg;
     msg.header.stamp = node_->now();
     msg.name = joint_model_group->getVariableNames();

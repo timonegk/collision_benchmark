@@ -23,6 +23,7 @@ ament_target_dependencies(
   benchmark_node
   moveit_core
   moveit_ros_planning_interface
+  moveit_ros_planning
   rclcpp
 )
 install(TARGETS benchmark_node DESTINATION lib/${PROJECT_NAME})

@@ -4,6 +4,7 @@
 #include <moveit/move_group_interface/move_group_interface.h>
 #include <moveit/robot_model_loader/robot_model_loader.h>
 #include <random_numbers/random_numbers.h>
+#include <moveit/planning_scene/planning_scene.h>
 
 #include <fstream>
 #include <rclcpp/rclcpp.hpp>
@@ -114,6 +115,7 @@ class IKBenchmarking {
   ///< using the robot_model_loader_.
   moveit::core::RobotStatePtr robot_state_;  ///< Shared pointer to the robot state which carries
   ///< information about joint values.
+  planning_scene::PlanningScenePtr planning_scene_;  ///< Planning scene to be used for collision
 
   std::string planning_group_name_;  ///< The name of the planning group (move_group) for which to
   ///< compute IK.
