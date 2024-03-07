@@ -106,8 +106,8 @@ void IKBenchmarking::gather_data() {
       state->update();
       planning_scene_->checkSelfCollision(req, res, *state);
       bool collision_free = !res.collision;
-      bool joint_valid = joint_group_variable_values[0] < 0.0;
-      std::cout << "collision_free: " << collision_free << " joint_valid: " << joint_valid << std::endl;
+      bool joint_valid = -0.1 < joint_group_variable_values[0] && joint_group_variable_values[0] < 0.1;
+      //std::cout << "collision_free: " << collision_free << " joint_valid: " << joint_valid << std::endl;
       return collision_free && joint_valid;
     };
 
@@ -134,7 +134,7 @@ void IKBenchmarking::gather_data() {
 
     benchmarking_logger_->log_data(i + 1, found_ik, solve_time.count(), position_error,
                                    orientation_error);
-    benchmarking_visualizer_->visualize_ik(robot_state_);
+    benchmarking_visualizer_->visualize_robot_state(robot_state_);
     std::this_thread::sleep_for(10ms);
   }
 

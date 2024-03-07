@@ -12,18 +12,24 @@ find_package(moveit_ros_planning_interface REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(ament_index_cpp REQUIRED)
+find_package(moveit_visual_tools REQUIRED)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic")
 
 add_executable(benchmark_node src/benchmark_node.cpp src/benchmark.cpp
   src/benchmark_logger.cpp
     src/benchmark_visualizer.cpp
-    src/benchmark_visualizer.hpp)
+    src/benchmark_visualizer.hpp
+    src/planning_benchmark.cpp
+    src/planning_benchmark.hpp
+    src/utils.hpp
+    src/utils.cpp)
 ament_target_dependencies(
   benchmark_node
   moveit_core
   moveit_ros_planning_interface
   moveit_ros_planning
+  moveit_visual_tools
   rclcpp
 )
 install(TARGETS benchmark_node DESTINATION lib/${PROJECT_NAME})

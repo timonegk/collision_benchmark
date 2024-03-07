@@ -1,32 +1,12 @@
 #include "benchmark.hpp"
+#include "planning_benchmark.hpp"
+#include "utils.hpp"
 #include <ament_index_cpp/get_package_share_directory.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <filesystem>
 #include <std_msgs/msg/string.hpp>
 
-std::string get_xacro(const std::string &xacro_file) {
-  std::string xacro_command = "xacro " + xacro_file;
-  std::string xacro_output;
-  FILE *stream = popen(xacro_command.c_str(), "r");
-  if (stream) {
-    const int max_buffer = 256;
-    char buffer[max_buffer];
-    while (!feof(stream)) {
-      if (fgets(buffer, max_buffer, stream) != nullptr) {
-        xacro_output.append(buffer);
-      }
-    }
-    pclose(stream);
-  }
-  return xacro_output;
-}
 
-void declare_and_set_parameter(const rclcpp::Node::SharedPtr &node, const rclcpp::Parameter &parameter) {
-  if (!node->has_parameter(parameter.get_name())) {
-    node->declare_parameter(parameter.get_name(), parameter.get_type());
-  }
-  node->set_parameter(parameter);
-}
 
 void set_elise_parameters(const rclcpp::Node::SharedPtr &node,
                           const rclcpp::Publisher<std_msgs::msg::String>::SharedPtr &robot_description_publisher) {
@@ -78,6 +58,7 @@ void set_kinematics_config_pick_ik(const rclcpp::Node::SharedPtr &node) {
                             rclcpp::Parameter("robot_description_kinematics.all.kinematics_solver_search_resolution",
                                               0.001));
   declare_and_set_parameter(node, rclcpp::Parameter("robot_description_kinematics.all.kinematics_solver_timeout", 1.0));
+  declare_and_set_parameter(node, rclcpp::Parameter("robot_description_kinematics.all.mode", "global"));
   /*declare_and_set_parameter(node, rclcpp::Parameter("robot_description_kinematics.all.memetic_gd_max_iters", 5));
   declare_and_set_parameter(node, rclcpp::Parameter("robot_description_kinematics.all.memetic_population_size", 40));
   declare_and_set_parameter(node,
@@ -95,6 +76,7 @@ void set_kinematics_config_bio_ik(const rclcpp::Node::SharedPtr &node) {
                             rclcpp::Parameter("robot_description_kinematics.all.kinematics_solver_search_resolution",
                                               0.001));
   declare_and_set_parameter(node, rclcpp::Parameter("robot_description_kinematics.all.kinematics_solver_timeout", 1.0));
+  declare_and_set_parameter(node, rclcpp::Parameter("robot_description_kinematics.all.mode", "bio2_memetic"));
   /*declare_and_set_parameter(node, rclcpp::Parameter("robot_description_kinematics.all.memetic_gd_max_iters", 5));
   declare_and_set_parameter(node, rclcpp::Parameter("robot_description_kinematics.all.memetic_population_size", 40));
   declare_and_set_parameter(node,
@@ -110,30 +92,33 @@ int main(int argc, char **argv) {
   auto robot_description_publisher = node->create_publisher<std_msgs::msg::String>("robot_description", rclcpp::QoS(1)
       .transient_local());
   declare_and_set_parameter(node, rclcpp::Parameter("random_seed", 0));
-  declare_and_set_parameter(node, rclcpp::Parameter("sample_size", 1000));
+  declare_and_set_parameter(node, rclcpp::Parameter("sample_size", 100));
   declare_and_set_parameter(node, rclcpp::Parameter("ik_timeout", 0.05));
   declare_and_set_parameter(node, rclcpp::Parameter("ik_iteration_display_step", 10));
 
   set_elise_parameters(node, robot_description_publisher);
   std::filesystem::path pkg_share_dir(ament_index_cpp::get_package_share_directory("benchmark"));
   std::filesystem::path results_dir(pkg_share_dir / "results");
+  std::filesystem::remove_all(results_dir);
   std::filesystem::create_directories(results_dir);
-  /*{
-    set_kinematics_config_kdl(node);
-    IKBenchmarking ik_benchmarking(node);
-    ik_benchmarking.run((results_dir / "kdl.csv").string());
-  }
   {
+    set_kinematics_config_trac_ik(node, "Speed");
+    //IKBenchmarking ik_benchmarking(node);
+    //ik_benchmarking.run((results_dir / "kdl.csv").string());
+    PlanningBenchmark planning_benchmarking(node);
+    planning_benchmarking.run((results_dir / "ompl.csv").string());
+  }
+  /*{
     set_kinematics_config_bio_ik(node);
     IKBenchmarking ik_benchmarking(node);
     ik_benchmarking.run((results_dir / "bio_ik.csv").string());
-  }*/
+  }
   {
     set_kinematics_config_pick_ik(node);
     IKBenchmarking ik_benchmarking(node);
     ik_benchmarking.run((results_dir / "pick_ik.csv").string());
   }
-  /*{
+  {
     set_kinematics_config_trac_ik(node, "Speed");
     IKBenchmarking ik_benchmarking(node);
     ik_benchmarking.run((results_dir / "trac_ik_speed.csv").string());
