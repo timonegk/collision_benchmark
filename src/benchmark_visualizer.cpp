@@ -1,4 +1,5 @@
 #include "benchmark_visualizer.hpp"
+#include <rviz_rendering/mesh_loader.hpp>
 
 BenchmarkVisualizer::BenchmarkVisualizer(rclcpp::Node::SharedPtr &node) : node_(node) {
   planning_group_name_ = node_->get_parameter("planning_group").as_string();
@@ -23,21 +24,35 @@ void BenchmarkVisualizer::visualize_robot_state(const moveit::core::RobotStateCo
 }
 
 void BenchmarkVisualizer::visualize_collision_object(const moveit_msgs::msg::CollisionObject &collision_object) const {
-  const visualization_msgs::msg::Marker marker = [&] {
-    visualization_msgs::msg::Marker marker;
-    marker.header.frame_id = collision_object.header.frame_id;
-    marker.header.stamp = node_->now();
-    marker.id = 0;
-    marker.type = visualization_msgs::msg::Marker::CUBE;
-    marker.action = visualization_msgs::msg::Marker::ADD;
-    marker.pose = collision_object.pose;
-    marker.scale.x = collision_object.primitives[0].dimensions[0];
-    marker.scale.y = collision_object.primitives[0].dimensions[1];
-    marker.scale.z = collision_object.primitives[0].dimensions[2];
-    marker.color.r = 1.0;
-    marker.color.a = 0.5;
-    return marker;
-  }();
+  visualization_msgs::msg::Marker marker;
+  marker.header = collision_object.header;
+  marker.id = 0;
+  if (!collision_object.primitives.empty()) {
+    if (collision_object.primitives[0].type == shape_msgs::msg::SolidPrimitive::BOX) {
+      marker.type = visualization_msgs::msg::Marker::CUBE;
+      marker.scale.x = collision_object.primitives[0].dimensions[0];
+      marker.scale.y = collision_object.primitives[0].dimensions[1];
+      marker.scale.z = collision_object.primitives[0].dimensions[2];
+    } else if (collision_object.primitives[0].type == shape_msgs::msg::SolidPrimitive::CYLINDER) {
+      marker.type = visualization_msgs::msg::Marker::CYLINDER;
+      marker.scale.x = collision_object.primitives[0].dimensions[0];
+      marker.scale.y = collision_object.primitives[0].dimensions[0];
+      marker.scale.z = collision_object.primitives[0].dimensions[1];
+    }
+  } else if (!collision_object.meshes.empty()) {
+    marker.type = visualization_msgs::msg::Marker::MESH_RESOURCE;
+    marker.mesh_resource = collision_object.id;
+    marker.scale.x = 1.0;
+    marker.scale.y = 1.0;
+    marker.scale.z = 1.0;
+  }
+  marker.ns = "visualization";
+  marker.action = visualization_msgs::msg::Marker::ADD;
+  marker.pose = collision_object.pose;
+  marker.color.r = 0.9;
+  marker.color.g = 0.9;
+  marker.color.b = 0.9;
+  marker.color.a = 1.0;
   collision_object_publisher_->publish(marker);
 }
 

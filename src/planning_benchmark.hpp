@@ -27,9 +27,13 @@ class PlanningBenchmark {
  private:
   void initialize(const std::string& log_file);
   void gather_data();
-  void setPlanningParameters();
+  void set_planning_parameters();
+  void check_collision();
+  [[nodiscard]] moveit_msgs::msg::CollisionObject get_collision_object_tank() const;
+  [[nodiscard]] moveit_msgs::msg::CollisionObject get_collision_object_box() const;
   rclcpp::Node::SharedPtr node_;
   rclcpp::Logger logger_;
+  rclcpp::Publisher<moveit_msgs::msg::CollisionObject>::SharedPtr collision_object_publisher_;
   robot_model_loader::RobotModelLoader robot_model_loader_;
   moveit::core::RobotModelPtr robot_model_;
   moveit::core::RobotStatePtr robot_state_;

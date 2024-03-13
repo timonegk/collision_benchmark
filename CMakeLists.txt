@@ -13,6 +13,8 @@ find_package(rclcpp REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(ament_index_cpp REQUIRED)
 find_package(moveit_visual_tools REQUIRED)
+find_package(tf2_eigen REQUIRED)
+find_package(rviz_rendering REQUIRED)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic")
 
@@ -31,6 +33,8 @@ ament_target_dependencies(
   moveit_ros_planning
   moveit_visual_tools
   rclcpp
+  tf2_eigen
+  rviz_rendering
 )
 install(TARGETS benchmark_node DESTINATION lib/${PROJECT_NAME})
 

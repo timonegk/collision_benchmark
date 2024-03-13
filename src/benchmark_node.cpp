@@ -102,7 +102,10 @@ int main(int argc, char **argv) {
   std::filesystem::remove_all(results_dir);
   std::filesystem::create_directories(results_dir);
   {
-    set_kinematics_config_trac_ik(node, "Speed");
+    //set_kinematics_config_trac_ik(node, "Speed");
+    //set_kinematics_config_bio_ik(node);
+    //set_kinematics_config_pick_ik(node);
+    set_kinematics_config_kdl(node);
     //IKBenchmarking ik_benchmarking(node);
     //ik_benchmarking.run((results_dir / "kdl.csv").string());
     PlanningBenchmark planning_benchmarking(node);
