@@ -1,11 +1,12 @@
 #include "benchmark.hpp"
 #include "planning_benchmark.hpp"
+#include "reach_benchmark.hpp"
 #include "utils.hpp"
 #include <ament_index_cpp/get_package_share_directory.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <filesystem>
 #include <std_msgs/msg/string.hpp>
-
+#include <reach_ros/utils.h>
 
 
 void set_elise_parameters(const rclcpp::Node::SharedPtr &node,
@@ -88,7 +89,7 @@ void set_kinematics_config_bio_ik(const rclcpp::Node::SharedPtr &node) {
 
 int main(int argc, char **argv) {
   rclcpp::init(argc, argv);
-  auto node = std::make_shared<rclcpp::Node>("benchmark_node");
+  auto node = reach_ros::utils::getNodeInstance();
   auto robot_description_publisher = node->create_publisher<std_msgs::msg::String>("robot_description", rclcpp::QoS(1)
       .transient_local());
   declare_and_set_parameter(node, rclcpp::Parameter("random_seed", 0));
@@ -104,12 +105,14 @@ int main(int argc, char **argv) {
   {
     //set_kinematics_config_trac_ik(node, "Speed");
     //set_kinematics_config_bio_ik(node);
-    //set_kinematics_config_pick_ik(node);
-    set_kinematics_config_kdl(node);
+    set_kinematics_config_pick_ik(node);
+    //set_kinematics_config_kdl(node);
     //IKBenchmarking ik_benchmarking(node);
     //ik_benchmarking.run((results_dir / "kdl.csv").string());
-    PlanningBenchmark planning_benchmarking(node);
-    planning_benchmarking.run((results_dir / "ompl.csv").string());
+    //PlanningBenchmark planning_benchmarking(node);
+    //planning_benchmarking.run((results_dir / "ompl.csv").string());
+    ReachBenchmark reach_benchmark;
+    reach_benchmark.run();
   }
   /*{
     set_kinematics_config_bio_ik(node);
@@ -132,5 +135,6 @@ int main(int argc, char **argv) {
     ik_benchmarking.run((results_dir / "trac_ik_distance.csv").string());
   }*/
   //return std::system("ros2 run benchmark plot_data.py");
+  rclcpp::shutdown();
   return 0;
 }
