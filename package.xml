@@ -12,6 +12,13 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
   <depend>ros_industrial_cmake_boilerplate</depend>
   <depend>moveit_ros_planning_interface</depend>
+  <depend>reach</depend>
+  <depend>reach_ros</depend>
+  <depend>bio_ik</depend>
+  <depend>trac_ik</depend>
+  <depend>pick_ik</depend>
+  <depend>elise_decription</depend>
+  <depend>elise_moveit_config</depend>
 
   <export>
     <build_type>ament_cmake</build_type>
