@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>benchmark</name>
+  <name>collision_benchmark</name>
   <version>1.0.0</version>
-  <description>IK Benchmarking package</description>
+  <description>IK Benchmarking package for collision-rich environments</description>
 
   <maintainer email="timon.engelke@uni-hamburg.de">Timon Engelke</maintainer>
   <author email="timon.engelke@uni-hamburg.de">Timon Engelke</author>
@@ -11,12 +11,7 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
   <depend>ros_industrial_cmake_boilerplate</depend>
-  <depend>moveit_ros_planning_interface</depend>
-  <depend>reach</depend>
-  <depend>reach_ros</depend>
-  <depend>bio_ik</depend>
-  <depend>trac_ik</depend>
-  <depend>pick_ik</depend>
+  <depend>ebike</depend>
   <depend>elise_decription</depend>
   <depend>elise_moveit_config</depend>
 

@@ -1,13 +1,7 @@
 from ament_index_python.packages import get_package_share_directory
 import reach_ros
-from benchmark.utils import get_xacro
-
-
-class AbstractRobot:
-    name = None
-
-    def set_config(self):
-        raise NotImplementedError
+from ebike.utils import get_xacro
+from ebike.robot import AbstractRobot
 
 
 class Elise(AbstractRobot):
@@ -21,3 +15,6 @@ class Elise(AbstractRobot):
             robot_description_semantic = file.read()
         reach_ros.set_parameter('robot_description', robot_description)
         reach_ros.set_parameter('robot_description_semantic', robot_description_semantic)
+
+    def get_planning_group(self):
+        return "all"
