@@ -101,6 +101,7 @@ class BenchmarkOptimization:
                     "threads": 4,
                 }
             )
+        self.study.set_metric_names(["percent_reached", "avg_ik_time"])
 
     def optimize(self):
         self.study.optimize(self.objective, n_trials=100)
