@@ -5,8 +5,8 @@ class TestEntry(AbstractScenario):
     name = 'test_entry'
     ply_file = f"package://collision_benchmark/scenarios/{name}.ply"
     pcd_file = f"package://collision_benchmark/scenarios/{name}.pcd"
-    hole_position = [0.9, 0.17, 0.8]
-    hole_axis = [1, 0, 0]
+    hole_position = [0.0, 1.0, 0.5]
+    hole_axis = [0, 1, 0]
 
 
 class TestEntrySeed(TestEntry):
@@ -30,7 +30,7 @@ class TestEntrySeed(TestEntry):
 class TestEntrySmall(AbstractScenario):
     name = 'test_entry_small'
     ply_file = f"package://collision_benchmark/scenarios/{name}.ply"
-    pcd_file = f"package://collision_benchmark/scenarios/{name}.pcd"
+    pcd_file = f"package://collision_benchmark/scenarios/test_entry.pcd"
     hole_position = [0.0, 1.0, 0.5]
     hole_axis = [0, 1, 0]
 
