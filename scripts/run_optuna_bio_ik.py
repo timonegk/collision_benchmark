@@ -9,7 +9,7 @@ from ebike.robot import UR10
 from ebike.scenario import SmallTable
 from ebike.utils import result_to_df
 from collision_benchmark.robot import Elise
-from collision_benchmark.scenario import TestEntry
+from collision_benchmark.scenario import HydrogenTank
 
 
 class BioIKOptuna(AbstractIK):
@@ -72,7 +72,7 @@ class BenchmarkOptimization:
         self.benchmark = Benchmark()
         self.robot = Elise()
         self.benchmark.add_robot(self.robot)
-        self.scenario = TestEntry()
+        self.scenario = HydrogenTank()
         self.benchmark.add_scenario(self.scenario)
         self.ik = BioIKOptuna()
         self.benchmark.add_ik(self.ik)

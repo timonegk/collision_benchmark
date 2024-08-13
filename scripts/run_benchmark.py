@@ -4,7 +4,7 @@ from ebike.ik import KDL, TracIK, TracIKDistance, PickIK, BioIK, RelaxedIK, BioI
     BioIKGDR, BioIKGDR8, BioIKJac, BioIKJac8, BioIKOptlibBFGS, BioIKOptlibBFGS4, BioIKRCM, BioIKDepth, BioIKCollisionDistance, \
     RelaxedIKRCM, RelaxedIKDepth, RelaxedIKCollisionDistance, BioIKLine, RelaxedIKLine, BioIKLineAlignment, RelaxedIKLineAlignment
 from ebike.scenario import Table, SmallTable, Shelf, Barrel, Random
-from collision_benchmark.scenario import Wing, TestEntrySmall, TestEntry
+from collision_benchmark.scenario import HydrogenTank, HydrogenTankSmall
 from collision_benchmark.robot import Elise
 
 if __name__ == '__main__':
@@ -29,8 +29,8 @@ if __name__ == '__main__':
     benchmark.add_scenario(Shelf())
     benchmark.add_scenario(SmallTable())
     benchmark.add_scenario(Table())
-    benchmark.add_scenario(TestEntry())
-    benchmark.add_scenario(TestEntrySmall())
+    benchmark.add_scenario(HydrogenTank())
+    benchmark.add_scenario(HydrogenTankSmall())
     benchmark.add_robot(Elise())
     benchmark.run()
     benchmark.print()
