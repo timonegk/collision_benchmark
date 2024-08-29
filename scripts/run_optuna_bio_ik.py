@@ -6,10 +6,10 @@ import reach_ros
 from ebike.benchmark import Benchmark
 from ebike.ik import AbstractIK
 from ebike.robot import UR10
-from ebike.scenario import SmallTable
+from ebike.scenario import *
 from ebike.utils import result_to_df
 from collision_benchmark.robot import Elise
-from collision_benchmark.scenario import HydrogenTank
+from collision_benchmark.scenario import *
 
 
 class BioIKOptuna(AbstractIK):
@@ -34,7 +34,7 @@ class BioIKOptuna(AbstractIK):
             f"robot_description_kinematics.{planning_group}.mode", "bio2_memetic"
         )
         reach_ros.set_parameter(
-            f"robot_description_kinematics.{planning_group}.population_size",
+            f"robot_description_kinematics.{planning_group}.population_size2",
             self.population_size,
         )
         reach_ros.set_parameter(
@@ -42,8 +42,8 @@ class BioIKOptuna(AbstractIK):
             self.child_count,
         )
         reach_ros.set_parameter(
-            f"robot_description_kinematics.{planning_group}.species_count",
-            self.species_count,
+            f"robot_description_kinematics.{planning_group}.elite_count2",
+            self.elite_count,
         )
         reach_ros.set_parameter(
             f"robot_description_kinematics.{planning_group}.memetic_opt_gens",
@@ -54,13 +54,18 @@ class BioIKOptuna(AbstractIK):
             self.memetic_evolution_gens,
         )
         reach_ros.set_parameter(
+            f"robot_description_kinematics.{planning_group}.species_count",
+            self.species_count,
+        )
+        reach_ros.set_parameter(
             f"robot_description_kinematics.{planning_group}.threads",
             self.threads,
         )
 
     def update_parameters(self, trial):
         self.population_size = trial.suggest_int("population_size", 1, 20)
-        self.child_count = trial.suggest_int("child_count", 2, 200, step=2)
+        self.child_count = trial.suggest_int("child_count", 0, 100)
+        self.elite_count = trial.suggest_int("elite_count", 0, self.population_size)
         self.species_count = trial.suggest_int("species_count", 1, 20)
         self.memetic_opt_gens = trial.suggest_int("memetic_opt_gens", 0, 50)
         self.memetic_evolution_gens = trial.suggest_int("memetic_evolution_gens", 0, 50)
@@ -72,7 +77,7 @@ class BenchmarkOptimization:
         self.benchmark = Benchmark()
         self.robot = Elise()
         self.benchmark.add_robot(self.robot)
-        self.scenario = HydrogenTank()
+        self.scenario = Random()
         self.benchmark.add_scenario(self.scenario)
         self.ik = BioIKOptuna()
         self.benchmark.add_ik(self.ik)
@@ -88,7 +93,7 @@ class BenchmarkOptimization:
                 study_name=study_name,
                 sampler=sampler,
                 storage=storage,
-                directions=["maximize", "minimize"],
+                direction="minimize",
             )
             self.study.enqueue_trial(
                 {
@@ -101,7 +106,6 @@ class BenchmarkOptimization:
                     "threads": 4,
                 }
             )
-        self.study.set_metric_names(["percent_reached", "avg_ik_time"])
 
     def optimize(self):
         self.study.optimize(self.objective, n_trials=100)
@@ -115,9 +119,12 @@ class BenchmarkOptimization:
         num_reached = np.sum(result.reached == 1)
         avg_ik_time = np.mean(result.ik_time[result.reached == 1])
         max_ik_time = np.max(result.ik_time[result.reached == 1])
-        # trial.set_user_attr("avg_ik_time", avg_ik_time)
+        trial.set_user_attr("solve_rate", num_reached / len(result))
         trial.set_user_attr("max_ik_time", max_ik_time)
-        return num_reached / len(result), avg_ik_time
+        # use the ik time if it was reached, otherwise set it to 1
+        time_metric = np.where(result.reached, result.ik_time, 1)
+        # return mean
+        return np.mean(time_metric)
 
 
 if __name__ == "__main__":
