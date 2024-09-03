@@ -48,17 +48,19 @@ class HydrogenTankSeed2(HydrogenTank):
 class HydrogenTankSmall(HydrogenTank):
     name = 'hydrogen_tank_small'
     ply_file = f"package://collision_benchmark/scenarios/hydrogen_tank_small.ply"
+    pcd_file = f"package://collision_benchmark/scenarios/hydrogen_tank_small.pcd"
 
 
 class HydrogenTankSmallSeed(HydrogenTankSeed):
     name = 'hydrogen_tank_small_seed'
     ply_file = f"package://collision_benchmark/scenarios/hydrogen_tank_small.ply"
+    pcd_file = f"package://collision_benchmark/scenarios/hydrogen_tank_small.pcd"
 
 
 class HydrogenTankBig(HydrogenTank):
     name = 'hydrogen_tank_big'
     ply_file = f"package://collision_benchmark/scenarios/hydrogen_tank_big.ply"
-    pcd_file = f"package://collision_benchmark/scenarios/hydrogen_tank_big.pcd"
+    pcd_file = f"package://collision_benchmark/scenarios/hydrogen_tank_big_10.pcd"
 
 
 class HydrogenTankBigSeed(HydrogenTankSeed):
