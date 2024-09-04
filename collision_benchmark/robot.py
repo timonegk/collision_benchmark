@@ -5,7 +5,7 @@ from ebike.robot import AbstractRobot
 
 
 class Elise(AbstractRobot):
-    name = 'elise'
+    name = 'ELISE'
 
     def set_config(self):
         xacro_file = get_package_share_directory('elise_description') + '/urdf/robot.urdf.xacro'

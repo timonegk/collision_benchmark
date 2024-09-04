@@ -2,15 +2,16 @@ from ebike.scenario import AbstractScenario
 
 
 class HydrogenTank(AbstractScenario):
-    name = 'hydrogen_tank'
-    ply_file = f"package://collision_benchmark/scenarios/{name}.ply"
-    pcd_file = f"package://collision_benchmark/scenarios/{name}.pcd"
+    name = 'HydrogenTank'
+    file_name = 'hydrogen_tank'
+    ply_file = f"package://collision_benchmark/scenarios/{file_name}.ply"
+    pcd_file = f"package://collision_benchmark/scenarios/{file_name}.pcd"
     hole_position = [0.0, 1.0, 0.5]
     hole_axis = [0, 1, 0]
 
 
 class HydrogenTankSeed(HydrogenTank):
-    name = 'hydrogen_tank_seed'
+    name = 'HydrogenTank (Straight Seed)'
     def get_config(self, *args):
         config = super().get_config(*args)
         config["optimization"]["seed_state"] = [
@@ -28,7 +29,7 @@ class HydrogenTankSeed(HydrogenTank):
 
 
 class HydrogenTankSeed2(HydrogenTank):
-    name = 'hydrogen_tank_seed2'
+    name = 'HydrogenTank (Target Seed)'
     def get_config(self, *args):
         config = super().get_config(*args)
         config["optimization"]["seed_state"] = [
@@ -46,24 +47,24 @@ class HydrogenTankSeed2(HydrogenTank):
 
 
 class HydrogenTankSmall(HydrogenTank):
-    name = 'hydrogen_tank_small'
+    name = 'HydrogenTankSmall'
     ply_file = f"package://collision_benchmark/scenarios/hydrogen_tank_small.ply"
     pcd_file = f"package://collision_benchmark/scenarios/hydrogen_tank_small.pcd"
 
 
 class HydrogenTankSmallSeed(HydrogenTankSeed):
-    name = 'hydrogen_tank_small_seed'
+    name = 'HydrogenTankSmall (Straight Seed)'
     ply_file = f"package://collision_benchmark/scenarios/hydrogen_tank_small.ply"
     pcd_file = f"package://collision_benchmark/scenarios/hydrogen_tank_small.pcd"
 
 
 class HydrogenTankBig(HydrogenTank):
-    name = 'hydrogen_tank_big'
+    name = 'HydrogenTankBig'
     ply_file = f"package://collision_benchmark/scenarios/hydrogen_tank_big.ply"
     pcd_file = f"package://collision_benchmark/scenarios/hydrogen_tank_big_10.pcd"
 
 
 class HydrogenTankBigSeed(HydrogenTankSeed):
-    name = 'hydrogen_tank_big_seed'
+    name = 'HydrogenTankBig (Straight Seed)'
     ply_file = f"package://collision_benchmark/scenarios/hydrogen_tank_big.ply"
     pcd_file = f"package://collision_benchmark/scenarios/hydrogen_tank_big.pcd"
