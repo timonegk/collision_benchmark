@@ -52,19 +52,39 @@ class HydrogenTankSmall(HydrogenTank):
     pcd_file = f"package://collision_benchmark/scenarios/hydrogen_tank_small.pcd"
 
 
-class HydrogenTankSmallSeed(HydrogenTankSeed):
+class HydrogenTankSmallSeed(HydrogenTankSmall):
     name = 'HydrogenTankSmall (Straight Seed)'
-    ply_file = f"package://collision_benchmark/scenarios/hydrogen_tank_small.ply"
-    pcd_file = f"package://collision_benchmark/scenarios/hydrogen_tank_small.pcd"
+
+    def get_config(self, *args):
+        config = super().get_config(*args)
+        config["optimization"]["seed_state"] = [
+                {"name": "shoulder_pan_joint", "position": 1.124},
+                {"name": "shoulder_lift_joint", "position": -1.471},
+                {"name": "elbow_joint", "position": 2.439},
+                {"name": "wrist_1_joint", "position": 2.055},
+                {"name": "wrist_2_joint", "position": -1.113},
+                {"name": "wrist_3_joint", "position": 0.0},
+                {"name": "endo_first_joint", "position": 0.0},
+                {"name": "endo_second_joint_first_dof", "position": 0.0},
+                {"name": "endo_second_joint_second_dof", "position": 0.0},
+        ]
+        return config
 
 
-class HydrogenTankBig(HydrogenTank):
-    name = 'HydrogenTankBig'
-    ply_file = f"package://collision_benchmark/scenarios/hydrogen_tank_big.ply"
-    pcd_file = f"package://collision_benchmark/scenarios/hydrogen_tank_big_10.pcd"
+class HydrogenTankSmallSeed2(HydrogenTankSmall):
+    name = 'HydrogenTankSmall (Target Seed)'
 
-
-class HydrogenTankBigSeed(HydrogenTankSeed):
-    name = 'HydrogenTankBig (Straight Seed)'
-    ply_file = f"package://collision_benchmark/scenarios/hydrogen_tank_big.ply"
-    pcd_file = f"package://collision_benchmark/scenarios/hydrogen_tank_big.pcd"
+    def get_config(self, *args):
+        config = super().get_config(*args)
+        config["optimization"]["seed_state"] = [
+                {"name": "shoulder_pan_joint", "position": 1.124},
+                {"name": "shoulder_lift_joint", "position": -1.471},
+                {"name": "elbow_joint", "position": 2.439},
+                {"name": "wrist_1_joint", "position": 2.055},
+                {"name": "wrist_2_joint", "position": -1.113},
+                {"name": "wrist_3_joint", "position": 2.974},
+                {"name": "endo_first_joint", "position": -0.304},
+                {"name": "endo_second_joint_first_dof", "position": 0.120},
+                {"name": "endo_second_joint_second_dof", "position": -1.375},
+        ]
+        return config
