@@ -14,6 +14,8 @@
   <depend>ebike</depend>
   <depend>elise_decription</depend>
   <depend>elise_moveit_config</depend>
+  <depend>bio_ik</depend>
+  <depend>relaxed_ik_cpp</depend>
 
   <export>
     <build_type>ament_cmake</build_type>
