@@ -16,6 +16,7 @@ class BioIKOptuna(AbstractIK):
     name = "bio_ik_optuna"
     population_size = None
     child_count = None
+    elite_count = None
     species_count = None
     memetic_opt_gens = None
     memetic_evolution_gens = None
@@ -72,13 +73,25 @@ class BioIKOptuna(AbstractIK):
         self.threads = trial.suggest_int("threads", 1, 8)
 
 
+class BioIKLineGoalOptuna(BioIKOptuna):
+    name = "bio_ik_line_goal_optuna"
+
+    def set_config(self, planning_group):
+        super().set_config(planning_group)
+        reach_ros.set_parameter("reach_ros.use_line_goal", True)
+
+
 class BenchmarkOptimization:
     def __init__(self):
         self.benchmark = Benchmark()
         self.robot = Elise()
         self.benchmark.add_robot(self.robot)
+        #self.scenario = HydrogenTank()
+        #self.scenario = TableObjects()
+        #self.scenario = Shelf()
         self.scenario = Random()
         self.benchmark.add_scenario(self.scenario)
+        #self.ik = BioIKLineGoalOptuna()
         self.ik = BioIKOptuna()
         self.benchmark.add_ik(self.ik)
 
